@@ -12,12 +12,14 @@ var Response = require("../bean/Response");
 var ServiceLocator = require("../services/ServiceLocator");
 
 
-
 /**
  * Contains User REST APIs.
  */
 class UserCtl extends BaseCtl {
 
+    /**
+     * Initialize service 
+     */
     constructor() {
         super();
         this.service = ServiceLocator.getUserService();
@@ -34,7 +36,6 @@ class UserCtl extends BaseCtl {
         roleService.search('', null, function (err, result) {
             response.json(result.list)
         });
-        //DataValidator.test();
     };
 
     /**
@@ -50,7 +51,6 @@ class UserCtl extends BaseCtl {
             response.json(r);
             return;
         }
-
         this.service.authenticate(bean, function (err, result) {
             console.log(err);
             if (!err) {
@@ -148,6 +148,12 @@ class UserCtl extends BaseCtl {
         });
     }
 
+
+    /**
+     * Validates change password form
+     * 
+     * @param {*} bean 
+     */
     validateChangePassword(bean) {
         var error = { hasError: false };
         if (DataValidator.isEmpty(bean.password)) {
@@ -163,7 +169,7 @@ class UserCtl extends BaseCtl {
 
 
     /**
-     * returns user profile data
+     * Returns user profile data of logged in user
      * @param {*} req 
      * @param {*} res 
      */
@@ -177,7 +183,7 @@ class UserCtl extends BaseCtl {
     }
 
     /**
-     * Destroys current session.
+     * Logot from system and destroys current session.
      * 
      * @param {*} request 
      * @param {*} response 
@@ -188,7 +194,7 @@ class UserCtl extends BaseCtl {
     }
 
     /**
-     * Returns menu items 
+     * Returns menu items of application
      * 
      * @param {*} request 
      * @param {*} response 
@@ -270,7 +276,7 @@ class UserCtl extends BaseCtl {
     }
 
     /**
-     * Returns bean of User controller.
+     * Populates request parameters in User bean and return
      * @param {*} request 
      */
     getBean(request) {

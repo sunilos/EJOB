@@ -17,25 +17,21 @@ class BaseService {
   findByPk(id, callback, ctx) {
     var sql = "SELECT * FROM " + this.getTable() + " WHERE ID= ?";
     var params = [id];
-    //this.executeSQLForObject(sql, params, this.getBean(), callback);
-    var bean = this.getBean();
-    this.executeSQL(sql, params, function (err, result) {
-      if (err) {
-        callback(err);
-      } else if (result.length > 0) {
-        bean.populateResult(result[0]);
-        callback(err, bean);
-      } else {
-        callback("Record not found");
-      }
-    });
-
-
+    this.executeSQLForObject(sql, params, this.getBean(), callback);
   };
 
   /**
+   * Finds a recordby unique column
+   */
+  findByUniqueKey(column, val, callback, ctx) {
+    var sql = "SELECT * FROM " + this.getTable() + " WHERE " +column +"= ? ";
+    var params = [val];
+    this.executeSQLForObject(sql, params, this.getBean(), callback);
+  };
+
+
+  /**
   * Returns bean object of a record.
-  * @deprecated
   */
   executeSQLForObject(sql, params, bean, callback) {
     this.executeSQL(sql, params, function (err, result) {
@@ -63,48 +59,8 @@ class BaseService {
 
     sql += this.getSearchCondition(bean);
 
-    //this.executeSQLForList(sql, { "pageNo": pageNo }, this.getBean(), callback);
+    this.executeSQLForList(sql, { "pageNo": pageNo }, this.getBean(), callback);
 
-    var self = this;
-
-    //Apply limit for pagination 
-
-    if (!pageNo || pageNo < 0) {
-      pageNo = 0;
-    }
-
-    if (this.pageSize > 0) {
-      var startIndex = (pageNo) * this.pageSize;
-      sql += " limit " + startIndex + "," + this.pageSize;
-    }
-
-    //Count query 
-    var sqlCount = "select count(*) as ct " + sql.substring(sql.toLocaleLowerCase().indexOf('from'));
-
-    self.executeSQL(sql, {}, function (err, result) {
-      if (err) {
-        callback(err);
-        return;
-      }
-
-      //Create list of objects
-      var list = [];
-      result.forEach(function (e) {
-        //Create clone of bean
-        //var bean = Object.create(beanObj);
-        var bean = self.getBean();
-        bean.populateResult(e);
-        list.push(bean);
-      });
-
-      //Get count of records and add at the last of list
-      self.executeSQL(sqlCount, {}, function (err, result) {
-        callback(err, {
-          "list": list,
-          "count": result[0].ct
-        });
-      });
-    });
   }
 
   /**

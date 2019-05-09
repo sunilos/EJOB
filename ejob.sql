@@ -1,3 +1,7 @@
+CREATE SCHEMA `SOS_EJOB` ;
+
+USE SOS_EJOB;
+
 CREATE TABLE `st_application` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `JOB_ID` bigint(20) DEFAULT NULL,
