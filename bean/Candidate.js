@@ -23,7 +23,7 @@ class Candidate extends BaseBean {
         this.id = res.ID;
         this.firstName = res.FIRST_NAME;
         this.lastName = res.LAST_NAME;
-        this.dob = res.DOB;
+        this.dob = DataUtility.formatDate(res.DOB);
         this.mobile = res.MOBILE;
         this.email = res.EMAIL;
         this.skill = res.SKILL;
